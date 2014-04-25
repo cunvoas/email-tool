@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+	<!-- Definition du fichier de config de mail externalisé -->
+	<bean name="mailPropertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="ignoreUnresolvablePlaceholders" value="false"/>
+	    <property name="location" value="classpath:mail/mailConfig.properties" />
+	  </bean> 
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>${mail.smtp.host}</value>
+		</property>
+		<property name="username">
+			<value>${mail.auth.user}</value>
+		</property>
+		<property name="password">
+			<value>${mail.auth.password}</value>
+		</property>
+		<property name="session" ref="sessionMail" />
+	</bean>
+	
+	<bean id="mailFrom" class="java.lang.String">
+		<constructor-arg>
+			<value>${mail.from}</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="mailBouchon" class="java.lang.Boolean">
+		<constructor-arg>
+			<value>${mail.bouchon}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="mailBouchonDestinataire" class="java.lang.String">
+		<constructor-arg>
+			<value>${mail.bouchon.destinataire}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="mailFromLabel" class="java.lang.String">
+		<constructor-arg>
+			<value>${mail.from.label}</value>
+		</constructor-arg>
+	</bean>
+		
+	<bean id="mailerUtil" class="com.github.cunvoas.mail.MailerUtil">
+		<property name="mailSender" ref="mailSender" />
+		<property name="mailFrom" ref="mailFrom" />
+		<property name="mailBouchon" ref="mailBouchon" />
+		<property name="mailBouchonDestinataire" ref="mailBouchonDestinataire" />
+		<property name="mailFromLabel" ref="mailFromLabel" />
+	</bean>
+	
+	<bean id="mailHelper" class="com.github.cunvoas.mail.helper.MailHelper">
+    <property name="domain">
+      <value>${mail.domain}</value>
+    </property>
+  </bean>
+
+</beans>
